@@ -1,0 +1,28 @@
+import time
+import threading
+
+def schedule_function(run_at, func, *args):
+    """
+    Schedule a function to run at a specified time.
+
+    :param run_at: The time at which to run the function (in seconds since the epoch).
+    :param func: The function to execute.
+    :param args: Variable number of arguments to pass to the function.
+    """
+    current_time = time.time()
+    delay = run_at - current_time
+
+    if delay < 0:
+        print("The specified time is in the past. The function will not be scheduled.")
+        return
+
+    print(f"{func.__name__}() scheduled for {time.ctime(run_at)}")
+
+    def delayed_execution():
+        time.sleep(delay)
+        func(*args)
+
+    threading.Thread(target=delayed_execution).start()
+
+# Example usage:
+schedule_function(time.time() + 5, print, 'Howdy!')
